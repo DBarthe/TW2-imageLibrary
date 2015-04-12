@@ -16,13 +16,13 @@ interface DatabaseAdapterInterface {
 
   function select($table, array $optional, array $params = null);
 
-  function insert($table, array $data, array $params = null);
+  function insert($table, array $data, array $params = null, $idColumn='id');
 
   function update($table, array $data, $where = null, array $params = null);
 
   function delete($table, $conditions, array $params = null);
 
-  function getInsertId($table);
+  function getInsertId($table, $idColumn='id');
 
   function countRows();
 }

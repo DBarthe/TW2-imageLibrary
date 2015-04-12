@@ -189,7 +189,7 @@ class PgsqlAdapter implements DatabaseAdapterInterface {
    * @param  aray $params the params to safely inject
    * @return integer the inserted id
    */
-  public function insert($table, array $data, array $params = null){
+  public function insert($table, array $data, array $params = null, $idColumn = 'id'){
 
     $columns = implode(',', array_keys($data));
     $values = implode(',', array_values($data));
@@ -197,7 +197,10 @@ class PgsqlAdapter implements DatabaseAdapterInterface {
     $query = 'INSERT INTO '.$table.' ('.$columns.' ) VALUES ('.$values.')';
 
     $this->query($query, $params);
-    return $this->getInsertId($table);
+
+
+
+    return (is_null($idColumn) ? null : $this->getInsertId($table, $idColumn));
   }
 
   /**
@@ -239,11 +242,11 @@ class PgsqlAdapter implements DatabaseAdapterInterface {
    * @param  string $table
    * @return mixed the id or null the link has not already be done.
    */
-  public function getInsertId($table){
+  public function getInsertId($table, $idColumn = 'id'){
     if (is_null($this->_link)){
       return null;
     }
-    return $this->_link->lastInsertId($table.'_id_seq');
+    return $this->_link->lastInsertId($table."_${idColumn}_seq");
   }
 
   /**
