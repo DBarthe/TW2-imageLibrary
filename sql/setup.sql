@@ -34,8 +34,8 @@ CREATE TABLE category (
 
 -- Table image_category (many-to-many)
 CREATE TABLE image_category (
-  category_name varchar(30) REFERENCES category,
-  image_id serial REFERENCES image,
+  category_name varchar(30) REFERENCES category ON DELETE CASCADE ON UPDATE CASCADE,
+  image_id serial REFERENCES image ON DELETE CASCADE ON UPDATE CASCADE,
 
   PRIMARY KEY (category_name, image_id)
 );
@@ -43,7 +43,7 @@ CREATE TABLE image_category (
 -- Table image_tag
 CREATE TABLE image_tag (
   tag varchar(30) NOT NULL,
-  image_id serial REFERENCES image,
+  image_id serial REFERENCES image ON DELETE CASCADE ON UPDATE CASCADE,
 
   PRIMARY KEY (tag, image_id)
 );
@@ -58,8 +58,8 @@ CREATE TABLE account (
 -- Table user_library
 CREATE TABLE user_library (
 
-  user_id serial REFERENCES account,
-  image_id serial REFERENCES image,
+  user_id serial REFERENCES account ON DELETE CASCADE ON UPDATE CASCADE,
+  image_id serial REFERENCES image ON DELETE CASCADE ON UPDATE CASCADE,
 
   PRIMARY KEY (user_id, image_id)
 );
