@@ -222,7 +222,5 @@ class DatabaseGateway {
       array(":$column" => $value));
     return ($ret === false ? null : $this->_adapter->fetchAll());
   }
-
 }
-
 ?>
