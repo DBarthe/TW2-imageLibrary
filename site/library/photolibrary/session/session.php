@@ -2,9 +2,6 @@
 
 namespace PhotoLibrary\Session;
 
-require_once 'User.php';
-require_once __DIR__.'/../shortcuts/database.php';
-
 class Session {
 
   private $_user;
@@ -15,7 +12,7 @@ class Session {
    * It detects if an authenticated session already exists, and attach itself to it. 
    */
   public function __construct(){
-    $this->_db = \PhotoLibrary\Shortcuts\getDatabase();
+    $this->_db = \PhotoLibrary\Shortcuts::getDatabase();
     if (isset($_SESSION['user'])){
       $this->_attachExisting(); 
     }
