@@ -9,21 +9,21 @@ RESTART IDENTITY CASCADE
 
 -- INSERT IMAGES
 INSERT INTO
-  image (author_name, author_url, width, height, license, title)
+  image (url, author_name, author_url, width, height, license, title)
 VALUES
-  ('NASA', 'www.nasa.gov', 140, 80, (true, true, true, true), 'Jupiter')
+  ('toto', 'NASA', 'www.nasa.gov', 140, 80, (true, true, true, true), 'Jupiter')
 ;
 
 INSERT INTO
-  image (author_name, author_url, width, height, license, title)
+  image (url, author_name, author_url, width, height, license, title)
 VALUES
-  ('NASA', 'www.nasa.gov', 140, 80, (true, true, true, true), 'Saturn')
+  ('toto', 'NASA', 'www.nasa.gov', 140, 80, (true, true, true, true), 'Saturn')
 ;
 
 INSERT INTO
-  image (author_name, author_url, width, height, license, title)
+  image (url, author_name, author_url, width, height, license, title)
 VALUES
-  ('Joe Star', 'www.ntm.com', 140, 80, (true, true, true, true), 'Oué gros !')
+  ('toto', 'Joe Star', 'www.ntm.com', 140, 80, (true, true, true, true), 'Oué gros !')
 ;
 
 -- INSERT CATEGORIES
@@ -46,6 +46,14 @@ VALUES (
   'astronomy',
   (SELECT id FROM image WHERE author_name = 'NASA' AND title = 'Saturn')
 );
+
+INSERT INTO
+  image_category
+VALUES (
+  'science',
+  (SELECT id FROM image WHERE author_name = 'NASA' AND title = 'Saturn')
+);
+
 
 INSERT INTO
   image_category
@@ -95,8 +103,6 @@ VALUES (
   'rap',
   (SELECT id FROM image WHERE author_name = 'Joe Star' AND title = 'Oué gros !')
 );
-
-
 
 -- INSERT ACCOUNTS
 INSERT INTO account VALUES (DEFAULT, 'foo', 'foo');

@@ -14,6 +14,8 @@ CREATE TABLE image (
 
   id serial PRIMARY KEY,
 
+  url text NOT NULL, -- url of the original image
+
   author_name varchar(70) NOT NULL, -- maybe first + last name
 
   author_url text, -- url of the author website (optional)
