@@ -2,8 +2,6 @@
 
 namespace PhotoLibrary\Database;
 
-require_once 'DatabaseAdapterInterface.php';
-
 use PDO;
 
 /**

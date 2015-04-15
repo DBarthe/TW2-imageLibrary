@@ -118,6 +118,7 @@ class DatabaseGateway {
     if ($this->_adapter->query($query, $params) === false){
       return null;
     }
+
     return $this->_adapter->fetchAll();
   }
 
@@ -175,8 +176,28 @@ class DatabaseGateway {
       $this->_adapter->fetchAll());
   }
 
+  // TABLE IMAGE_CATEGORY
+  /**
+   * Return an array of string
+   */
+  public function getImageCategories($imageId){
+    $ret = $this->_getEntriesWithX('image_category', 'image_id', $imageId);
+    if (is_null($ret)){
+      return null;
+    }
+    return array_map(function($row){ return $row['category_name']; }, $ret);
+  }
+
+  // TABLE IMAGE_TAGS 
+  public function getImageTags($imageId){
+    $ret = $this->_getEntriesWithX('image_tag', 'image_id', $imageId);
+    if (is_null($ret)){
+      return null;
+    }
+    return array_map(function($row){ return $row['tag']; }, $ret);
+  }
+
   // TABLE USER_LIBRARY
- 
   /**
    * Return an array of image id
    */
