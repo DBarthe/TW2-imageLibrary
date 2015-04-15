@@ -1,12 +1,12 @@
 <?php
 
-require_once 'library/shortcuts/database.php';
+require_once 'library/autoload.php';
 
 use PhotoLibrary\Shortcuts;
 
 try{
 
-  $db = Shortcuts\getDatabase();
+  $db = Shortcuts::getDatabase();
 
 
   echo "------------------------\n";
