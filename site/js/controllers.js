@@ -68,6 +68,36 @@ var photoLib = (function(photoLib){
     console.log(this.categoryInput.value)
     console.log(this.userInput.value)
     console.log(this.tagsInput.value)
+
+    fetchImages({})
+  }
+
+  /**
+   * Fetch the images from the server (via the web-service), according to
+   * the given criteria.
+   */
+  searchResultsCtrl.fetchImages = function(criteria){
+
+    var that = this
+        baseUrl = './image-search.php'
+      , request = new photoLib.services.AsyncGetRequest(baseUrl, criteria)
+
+    request.onLoad = function(response){
+      photoLib.models.searchStatus.setSuccess()
+      console.log('onLoad:' + response);
+      // TODO
+    }
+
+    request.onProgress = function(progress){
+      photoLib.models.searchStatus.setLoading(progress)
+    }
+
+    request.onFailure = function(){
+      photoLib.models.searchStatus.setFailure()
+    }
+
+    photoLib.model.searchStatus.setLoading()
+    service.send();
   }
 
   /*
