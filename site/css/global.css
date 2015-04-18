@@ -1,0 +1,162 @@
+/*
+ * Global classes
+ */
+.inline-block {
+  display: inline-block;
+}
+.inline {
+  display: inline;
+}
+
+/*
+ * Basic
+ */
+body {
+  margin: 0;
+  margin-top: 40px;
+  padding: 0;
+  background: #DDDFE4;
+}
+
+* {
+  font-family: "Open Sans",Helvetica,Arial,sans-serif;
+  box-sizing: border-box;
+}
+
+/*
+ * Navbar
+ */
+header {
+  position: fixed;
+  top: 0px;
+  left: 270px;
+  width: 100%;
+}
+
+#topnav {
+}
+
+#topnav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background-color: #393F4F;
+  overflow: auto;
+  text-align: left;
+}
+
+#topnav li {
+  text-align: center;
+  font-size: 1.1em;
+  width: 120px;
+  height: 40px;
+  border-bottom: none;
+  line-height: 40px;
+  display: inline-block;
+  margin-right: -4px;
+  transition: 0.4s background-color;
+}
+
+#topnav li:hover {
+  transition: 0.4s background-color;
+  background-color: #46BE9C;
+}
+
+#topnav a {
+  text-decoration: none;
+  color: white;
+  width: 60px;
+}
+
+#topnav .current-nav-li {
+  background-color: #FDBE37;
+  border-width: 0px;
+}
+
+#topnav .current-nav-li:hover {
+  background-color: #FDBE37;
+}
+
+#topnav .current-nav-li a {
+  color: black;
+  cursor: default;
+}
+
+/*
+ * sidebar
+ */
+#sidebar {
+
+  position: fixed;
+  width: 270px;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  background-color: #191E28;
+  color: white;
+  display: inline-block;
+}
+
+#sidebar h1 {
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  border-bottom: solid 1px;
+
+  background-color: #393F4F;
+}
+
+#sidebar-search-container {
+  margin: 0;
+  padding: 0;
+
+  margin-top: 10px;
+  width: 250px;
+  margin-left: 10px;
+  text-align: center;
+}
+
+.sidebar-search-entry {
+  font-size: 1.2em;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  margin-bottom: 10px;
+  border-style: none;
+  border-radius: 3px;
+  border: solid 2px;
+  border-color: #DDDFE4;
+  transition: 0.4s border-color;
+}
+
+input.sidebar-search-entry:focus {
+  border-color: #46BE9C;
+}
+
+
+#sidebar-search-submit {
+  width: 40%;
+  transition: 0.4s background-color,
+              0.4s border-radius,
+              0.4s width,
+              0.4s color linear;
+  color: black;
+  border: none;
+  background-color: #DDDFE4;
+}
+
+#sidebar-search-submit:hover {
+  background-color: #46BE9C;
+  border-radius: 10px;
+  width: 50%;
+  color: white;
+}
+
+
+/*
+ * content
+ */
+#content {
+  margin-left: 270px;
+}
