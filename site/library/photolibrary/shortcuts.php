@@ -24,7 +24,7 @@ class Shortcuts {
   /**
    * Giving an image row, return its thumbnail filename (without path).
    */
-  function getThumbnailName($imageRow){
+  public static function getThumbnailName($imageRow){
     return $imageRow['id'].'.'.\PhotoLibrary\Config::$THUMBNAILS_EXT;
   }
 }
