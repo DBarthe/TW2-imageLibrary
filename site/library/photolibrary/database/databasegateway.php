@@ -150,7 +150,16 @@ class DatabaseGateway {
 
   public function getAllUsers(){
     $ret = $this->_adapter->select('account');
-    return ($ret === false ? null : $this->_adapter->fetchAll());
+
+    if ($ret === false){
+      return null;
+    }
+
+    return array_map(
+      function($userRow){
+        return new \PhotoLibrary\Session\User($userRow); },
+      $this->_adapter->fetchAll()
+    );
   }
 
   public function createUser($login, $password){

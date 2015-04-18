@@ -40,7 +40,6 @@ class ImageSearch {
     return $response;
   }
 
-
   /**
    * Parse the $_GET variable and return a criteria array usable with _searchImage()
    */
