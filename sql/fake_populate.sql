@@ -26,6 +26,14 @@ VALUES
   ('toto', 'Joe Star', 'www.ntm.com', 140, 80, (true, true, true, true), 'Oué gros !')
 ;
 
+INSERT INTO
+  image (url, author_name, author_url, width, height, license, title)
+VALUES
+  ('titi', 'Booba', null, 140, 80, (true, true, true, true), 'WALA')
+;
+
+
+
 -- INSERT CATEGORIES
 INSERT INTO category VALUES ('science', NULL);
 INSERT INTO category VALUES ('astronomy', 'science');

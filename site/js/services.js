@@ -4,6 +4,12 @@
 
  var photoLib = (function(photoLib){
 
+  console.log("loading services")
+
+  if (typeof photoLib === 'undefined'){
+    photoLib = {}
+    console.log("create photoLib")
+  }
 
   /**
    * Constructor of the asynchronous get request service.
@@ -22,7 +28,8 @@
 
   AsyncGetRequest.prototype._buildUrl = function(baseUrl, params){
     this._buildQueryString()
-    this.url = baseUrl + '?' + this.queryString
+    this.url = this.baseUrl + '?' + this.queryString
+    console.log('url: ' + this.url)
   }
 
   AsyncGetRequest.prototype._buildQueryString = function(){
@@ -54,6 +61,6 @@
     AsyncGetRequest: AsyncGetRequest
   }
 
-  }
+  return photoLib
 
  })(photoLib)

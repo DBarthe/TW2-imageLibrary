@@ -5,8 +5,11 @@
 // within namespace 'photoLib'
 var photoLib = (function(photoLib){
 
+  console.log("loading models")
+
   if (typeof photoLib === 'undefined'){
     photoLib = {}
+    console.log("create photoLib")
   }
 
   /**
@@ -14,10 +17,17 @@ var photoLib = (function(photoLib){
    */
   var modelPrototype = Object.create(Object.prototype, {
  
-    'nextObserverId': { value: 0, writable: true, enumerable: true },
+    'nextObserverId': { writable: true, enumerable: true },
 
-    'observerMap': { value: {}, writable: true, enumerable: true },
- 
+    'observerMap': { writable: true, enumerable: true },
+
+    'initialize': {
+      value: function(){
+        this.nextObserverId = 0
+        this.observerMap = {}
+      }
+    },
+
     /**
      * attach an observer to the model
      * @param function observer is a callback that will be called when the model changes.
@@ -29,7 +39,7 @@ var photoLib = (function(photoLib){
       value: function(observer){
         var id = this.nextObserverId
         this.nextObserverId += 1
-        this.observerMap[id] = callback
+        this.observerMap[id] = observer
         return id
       }
     },
@@ -55,7 +65,7 @@ var photoLib = (function(photoLib){
     'notify': {
       value: function(){
         for (var id in this.observerMap){
-          if (this.observer.hasOwnProperty(id)){
+          if (this.observerMap.hasOwnProperty(id)){
             this.observerMap[id]({ observerId: id, model: this })
           }
         }
@@ -65,16 +75,16 @@ var photoLib = (function(photoLib){
 
   var imageSetterHelper = function(img, property, value, typesExpected){
 
-    typesExpected = [].typeExpected;
+    typesExpected = [].concat(typesExpected)
 
     for (var i = 0; i < typesExpected.length; i += 1){
       if (typeof value === typesExpected[i]){
-       img['_' + property] = value
-       return;
+        img['_' + property] = value
+        return;
       }
     }
 
-    throw 'error: invalid image ' + poperty
+    console.log('error: invalid image ' + property + '(' + typeof value + ')')
   }
 
   /**
@@ -82,19 +92,16 @@ var photoLib = (function(photoLib){
    * that maintain a collection of image will depends on it.
    */
   var imagePrototype = Object.create(Object.prototype, {
-    '_id': { writable: true, enumerable: true },
     'id': {
       get: function(){ return this._id },
-      set: function(id){ imageSetterHelper(this, 'id', id, 'number') }
+      set: function(id){ imageSetterHelper(this, 'id', id, ['number', 'string']) }
     },
 
-    '_url': { writable: true, enumerable: true },
     'url': {
       get: function(){ return this._url },
       set: function(url){ imageSetterHelper(this, 'url', url, 'string') }
     },
 
-    '_size': { writable: true, enumerable: true },
     'size': {
       get: function(){ return this._size },
       set: function(size){
@@ -107,31 +114,26 @@ var photoLib = (function(photoLib){
       }
     },
 
-    '_thumbnail': { writable: true, enumerable: true },
     'thumbnail': {
       get: function(){ return this._thumbnail },
       set: function(thumbnail){ imageSetterHelper(this, 'thumbnail', thumbnail, 'string') }
     },
 
-    '_author': { writable: true, enumerable: true },
     'author': {
       get: function(){ return this._author },
       set: function(author){ imageSetterHelper(this, 'author', author, 'string') }
     },
 
-    '_authorUrl': { writable: true, enumerable: true },
     'authorUrl': {
       get: function(){ return this._authorUrl },
       set: function(authorUrl){ imageSetterHelper(this, 'authorUrl', authorUrl, ['string', 'undefined']) }
     },
 
-    '_title': { writable: true, enumerable: true },
     'title': {
       get: function(){ return this._title },
       set: function(title){ imageSetterHelper(this, 'title', title, 'string') }
     },
 
-    '_categoryList': { writable: true, enumerable: true },
     'categoryList': {
       get: function(){ return this._categoryList },
       set: function(categoryList){
@@ -142,7 +144,6 @@ var photoLib = (function(photoLib){
       }
     },
 
-    '_tagList': { writable: true, enumerable: true },
     'tagList': {
       get: function(){ return this._tagList },
       set: function(tagList){
@@ -154,6 +155,11 @@ var photoLib = (function(photoLib){
     }
   })
 
+  var imageProperties = [
+    'id', 'url', 'size', 'thumbnail', 'author',
+    'authorUrl', 'title', 'categoryList', 'tagList'
+  ]
+
   /**
    * Build an image, checking the validity of the given values.
    * @param  object values   the values of the wanted images, will be validate, all field are required
@@ -163,9 +169,15 @@ var photoLib = (function(photoLib){
   var buildImage = function(values){
     var img = Object.create(imagePrototype);
     
-    for (var property in imagePrototype){
-      if (imagePrototype.hasOwnProperty(property)){
-        img[property] = values[prototype];
+    for (var i = 0; i < imageProperties.length; i += 1){
+      var property = imageProperties[i];
+      console.log(property + '=' + values[property] + " - " + (typeof values[property]));
+
+      if (values[property] === null){
+        img[property] = undefined        
+      }
+      else {
+        img[property] = values[property]
       }
     }
 
@@ -176,7 +188,7 @@ var photoLib = (function(photoLib){
    * Create a searchResults model prototype, used to store the collection of images
    * that match the filters and have to be displayed, depending of the current viewMode
    */
-  var searchResultsPrototype = Object.create(modelPrototype, {
+  var searchResults = Object.create(modelPrototype, {
 
     // the collection of images
     '_collection': { value: [], writable: true, enumerable: true },
@@ -189,6 +201,7 @@ var photoLib = (function(photoLib){
 
       // this setter calls this.notify to inform the obervers that the model has changed
       set: function(collection){
+        console.log("collection change")
         this._collection = collection
         this.notify()
       }
@@ -200,6 +213,7 @@ var photoLib = (function(photoLib){
      */
     'replace': {
       value: function(collection){
+        console.log("collection rep")
         this.collection = collection
       }
     },
@@ -224,13 +238,16 @@ var photoLib = (function(photoLib){
     }
   })
 
-
-  var searchStatusPrototype = Object.create(modelPrototype, {
+  /**
+   * Information about the connexion to the server api
+   */
+  var searchStatus = Object.create(modelPrototype, {
 
     'str': { value: 'none', enumerable: true, writable: true },
     'options': { value: {}, enumerable: true, writable: true },
 
     'setLoading': {
+      // progress is in percent
       value: function(progress){
         if (typeof progress === 'undefined'){
           progress = 0
@@ -267,16 +284,21 @@ var photoLib = (function(photoLib){
   })
 
 
+  searchResults.initialize()
+  searchStatus.initialize()
+
 
   // Create a sub-namespace 'models'. Add some of the the previous definitions to it.
   photoLib.models = {
     buildImage: buildImage,
-    searchResults: Object.create(searchResultsPrototype),
-    searchStatus: Object.create(searchStatusPrototype)
+    searchResults: searchResults,
+    searchStatus: searchStatus,
     session: null,
     userCollection: null,
     viewMode: null,
     thumbnailDir: null
   }
+
+  return photoLib
 
 })(photoLib)

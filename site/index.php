@@ -29,7 +29,9 @@ if (!is_array($userList)){
   <link rel="stylesheet" type="text/css" href="css/global.css">
 
   <script type="text/javascript" src='./js/models.js'></script>
+  <script type="text/javascript" src='./js/services.js'></script>
   <script type="text/javascript" src='./js/controllers.js'></script>
+  <script type="text/javascript" src='./js/views.js'></script>
 
   <title>PhotoLibrary</title>
 </head>
@@ -99,7 +101,7 @@ if (!is_array($userList)){
     </div>
   </div>
 
-  <div id='content' class='inline-block'>
+  <div id='main-container' class='inline-block'>
 
  <!--    <p>toto
       dqs
