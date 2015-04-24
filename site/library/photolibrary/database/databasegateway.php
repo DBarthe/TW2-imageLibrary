@@ -112,8 +112,6 @@ class DatabaseGateway {
       $query = $query.' OFFSET :offset';
     }
 
-    echo "query=$query\n";
-
     // execute the big query
     if ($this->_adapter->query($query, $params) === false){
       return null;

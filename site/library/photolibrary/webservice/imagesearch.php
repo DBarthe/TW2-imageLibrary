@@ -79,10 +79,6 @@ class ImageSearch {
     $helper('withId');
     $helper('text');
 
-    var_dump($error);
-
-    var_dump($criteria);
-
     return ($error ? null : $criteria);
   }
 
@@ -110,7 +106,7 @@ class ImageSearch {
       return null;
     }
 
-    $withId = (isset($criteria['withId']) && $criteria['withId'] === true);
+    $withId = (isset($criteria['withId']) && $criteria['withId'] == true);
     $imageArray = array_map(function($row) use ($withId) {
         return ImageSearch::_buildImageObject($row, $withId);
       }, $rows
