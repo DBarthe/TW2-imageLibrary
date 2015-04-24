@@ -224,10 +224,55 @@ var photoLib = (function(photoLib){
     }
   })
 
+
+  var searchStatusPrototype = Object.create(modelPrototype, {
+
+    'str': { value: 'none', enumerable: true, writable: true },
+    'options': { value: {}, enumerable: true, writable: true },
+
+    'setLoading': {
+      value: function(progress){
+        if (typeof progress === 'undefined'){
+          progress = 0
+        }
+        this.str = 'loading'
+        this.options = { progress: progress }
+        this.notify()
+      }
+    },
+
+    'setNone': {
+      value: function(){
+        this.str = 'none'
+        this.options = {}
+        this.notify()
+      }
+    },
+
+    'setSuccess': {
+      value: function(){
+        this.str = 'success'
+        this.options = {}
+        this.notify()
+      }
+    },
+
+    'setFailure': {
+      value: function(){
+        this.str = 'failure'
+        this.options = {}
+        this.notify()
+      }
+    }
+  })
+
+
+
   // Create a sub-namespace 'models'. Add some of the the previous definitions to it.
   photoLib.models = {
     buildImage: buildImage,
     searchResults: Object.create(searchResultsPrototype),
+    searchStatus: Object.create(searchStatusPrototype)
     session: null,
     userCollection: null,
     viewMode: null,
