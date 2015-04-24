@@ -160,7 +160,7 @@ var photoLib = (function(photoLib){
    * @return image  an image object
    * @throws an exception if 'values' is not valid.
    */
-  var imageBuilder = function(values){
+  var buildImage = function(values){
     var img = Object.create(imagePrototype);
     
     for (var property in imagePrototype){
@@ -226,7 +226,7 @@ var photoLib = (function(photoLib){
 
   // Create a sub-namespace 'models'. Add some of the the previous definitions to it.
   photoLib.models = {
-    imageBuilder: imageBuilder,
+    buildImage: buildImage,
     searchResults: Object.create(searchResultsPrototype),
     session: null,
     userCollection: null,
