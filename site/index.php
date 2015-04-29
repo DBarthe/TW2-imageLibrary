@@ -39,6 +39,7 @@ if (!is_array($userList)){
 <body>
 
   <header>
+    <h1>PhotoLib</h1>
     <nav id="topnav">
       <ul>
         <li class='current-nav-li'><a href='./index.php'>Home</a></li>
@@ -59,8 +60,6 @@ if (!is_array($userList)){
 
   
   <div id='sidebar'>
-    <h1>PhotoLib</h1>
-  
     <div id='sidebar-search-container'>
         <input id="sidebar-text-input"
           class='sidebar-search-entry' type='text' name='text'

@@ -20,12 +20,36 @@ body {
 header {
   position: fixed;
   top: 0px;
-  left: 270px;
+  left: 0px;
   width: 100%;
+  height: 40px;
   z-index: 2;
+  margin: 0;
+  padding: 0;
+}
+
+header h1 {
+  display: inline-block;
+  height: 41px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 270px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  border-bottom: solid 1px white;
+  background-color: #393F4F;
+  color: white;
 }
 
 #topnav {
+  position: absolute;
+  width: 100%;
+  top: 0px;
+  left: 270px;
+  border-bottom: solid 1px white;
+  display: inline-block;
 }
 
 #topnav ul {
@@ -40,14 +64,18 @@ header {
 #topnav li {
   text-align: center;
   font-size: 1.1em;
-  width: 120px;
-  height: 40px;
-  border-bottom: none;
+
+  border: none;
   line-height: 40px;
   display: inline-block;
-  margin-right: -4px;
   transition: 0.4s background-color;
+  margin-right: -0px;
 }
+
+#topnav li:first-child {
+  margin-right: -4px;
+}
+
 
 #topnav li:hover {
   transition: 0.4s background-color;
@@ -57,12 +85,13 @@ header {
 #topnav a {
   text-decoration: none;
   color: white;
-  width: 60px;
+  display: inline-block;
+  width: 120px;
+  height: 40px;
 }
 
 #topnav .current-nav-li {
   background-color: #FDBE37;
-  border-width: 0px;
 }
 
 #topnav .current-nav-li:hover {
@@ -78,10 +107,9 @@ header {
  * sidebar
  */
 #sidebar {
-
   position: fixed;
   width: 270px;
-  top: 0px;
+  top: 41px;
   left: 0px;
   bottom: 0px;
   background-color: #191E28;
@@ -89,15 +117,6 @@ header {
   display: inline-block;
 }
 
-#sidebar h1 {
-  height: 40px;
-  margin: 0;
-  padding: 0;
-  text-align: center;
-  border-bottom: solid 1px;
-
-  background-color: #393F4F;
-}
 
 #sidebar-search-container {
   margin: 0;
@@ -288,8 +307,7 @@ input.sidebar-search-entry:focus {
   user-select: none;
 }
 
-
-button.custom-button {
+.custom-button {
   transition: 0.3s background-color,
               0.3s border-radius,
               0.3s color linear;
@@ -298,7 +316,7 @@ button.custom-button {
   background-color: #DDDFE4;
 }
 
-button.custom-button:hover {
+.custom-button:hover {
   background-color: #46BE9C;
   border-radius: 7px;
   color: white;
@@ -452,4 +470,42 @@ button.custom-button:hover {
   top: 0px;
   margin-top: 2px;
   margin-left: 7px;
+}
+
+/*
+ * login 
+ */
+#login-container {
+  width: 400px;
+  border-radius: 3px;
+  margin: 0 auto;
+  margin-top: 70px;
+  padding: 10px;
+  text-align: center;
+  background-color: #46BE9C;
+}
+
+#login-container > form > span {
+  font-weight: bold;
+}
+
+#login-button {
+  display: block;
+  font-size: 1.2em;
+  background-color: white;
+  border-radius: 2px;
+  margin: 0 auto;
+}
+
+#login-button:hover {
+  background-color: #FDBE37;
+  border-radius: 7px;
+  color: #191E28;
+}
+
+#login-error-msg {
+  border-radius: 3px;
+  background-color: #FF5254;
+  color: white;
+  font-weight: bold;
 }

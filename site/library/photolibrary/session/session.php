@@ -47,7 +47,7 @@ class Session {
     }
     $user = $this->_db->getUserByLogin($login);
     if (is_null($user) || $user['password'] !== $password){
-      return null;
+      return false;
     }
     $this->_user = new User($user);
     $_SESSION['user'] = $login;
