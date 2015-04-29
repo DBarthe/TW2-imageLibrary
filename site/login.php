@@ -3,6 +3,8 @@ session_start();
 
 require_once 'library/autoload.php';
 
+$page = 'login';
+
 $session = new \PhotoLibrary\Session\Session();
 
 if ($session->isAuthenticated()){
@@ -39,25 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 </head>
 <body>
 
-  <header>
-    <h1>PhotoLib</h1>
-    <nav id="topnav">
-      <ul>
-        <li><a href='./index.php'>Home</a></li>
-        <?php
-        if ($session->isAuthenticated()){ 
-          $userName = $session->getUser()->getName();
-          echo "<li><a href='./account.php'>$userName</a></li>"
-              ."<li><a href=./logout.php>Logout</a></li>";
-        }
-        else {
-          echo "<li class='current-nav-li'><a href='./login.php'>Login</a></li>"
-              ."<li><a href='./signup.php'>Signup</a></li>";
-        }
-        ?>
-      </ul>
-    </nav>
-  </header>
+  <?php include 'views/header.php'; ?>
   
   
   <div id='login-container'>
@@ -67,8 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     <?php } ?>
 
     <form name='loginForm' method='post' action='login.php'>
-      <span>Username: </span><input type='text' name='username'/><br />
-      <span>Password: </span><input type='password' name='password'/><br /><br />
+      <span>Username:</span><input class='login-input' type='text' name='username' required/><br />
+      <span>Password:</span><input class='login-input' type='password' name='password' required/><br /><br />
       <input id='login-button' class='custom-button' type='submit' value='Login' />
     </form>
       

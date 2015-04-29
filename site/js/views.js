@@ -61,7 +61,7 @@
       html += "<li>"
         + '<span class="image-thumb-helper">'
         + '<div class="image-thumb-container">'
-        + '<img class="image-thumb" src="' + thumbUrl + '"></img>'
+        + '<img class="image-thumb" src="' + thumbUrl + '">'
         + '<div class="image-thumb-info">'
       html += '<p class="image-title">' + img.title + '<p>'
       html += '<p>by <a ' + (img.authorUrl ? ('href="' + photoLib.utils.normalizeURL(img.authorUrl) + '" ') : "")
@@ -94,7 +94,7 @@
 
   imageListView.makeLicenseElement = function(license){
     var makeImg = function(file, alt){
-      return '<img src="' + file + '" alt="' + alt + '" class="cc-thumb"></img>'
+      return '<img src="' + file + '" alt="' + alt + '" class="cc-thumb">'
     }
 
     var helper = function(name, alt){

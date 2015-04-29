@@ -69,11 +69,9 @@ header h1 {
   line-height: 40px;
   display: inline-block;
   transition: 0.4s background-color;
-  margin-right: -0px;
 }
 
 #topnav li:first-child {
-  margin-right: -4px;
 }
 
 
@@ -475,7 +473,7 @@ input.sidebar-search-entry:focus {
 /*
  * login 
  */
-#login-container {
+#login-container, #signup-container {
   width: 400px;
   border-radius: 3px;
   margin: 0 auto;
@@ -485,25 +483,40 @@ input.sidebar-search-entry:focus {
   background-color: #46BE9C;
 }
 
-#login-container > form > span {
+#login-container > form > span, #signup-container > form > span {
   font-weight: bold;
+  width: 150px;
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  text-align: left;
 }
 
-#login-button {
+#login-input #signup-input  {
+  font-weight: bold;
+  width: 150px;
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+}
+
+
+#login-button, #signup-button {
   display: block;
   font-size: 1.2em;
   background-color: white;
   border-radius: 2px;
   margin: 0 auto;
+
 }
 
-#login-button:hover {
+#login-button:hover, #signup-button:hover {
   background-color: #FDBE37;
   border-radius: 7px;
   color: #191E28;
 }
 
-#login-error-msg {
+#login-error-msg, #signup-error-msg {
   border-radius: 3px;
   background-color: #FF5254;
   color: white;

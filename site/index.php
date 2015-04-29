@@ -3,6 +3,8 @@ session_start();
 
 require_once 'library/autoload.php';
 
+$page = 'index';
+
 $session = new \PhotoLibrary\Session\Session();
 
 $db = \PhotoLibrary\Shortcuts::getDatabase();
@@ -38,68 +40,11 @@ if (!is_array($userList)){
 </head>
 <body>
 
-  <header>
-    <h1>PhotoLib</h1>
-    <nav id="topnav">
-      <ul>
-        <li class='current-nav-li'><a href='./index.php'>Home</a></li>
-        <?php
-        if ($session->isAuthenticated()){ 
-          $userName = $session->getUser()->getName();
-          echo "<li><a href='./account.php'>$userName</a></li>"
-              ."<li><a href=./logout.php>Logout</a></li>";
-        }
-        else {
-          echo "<li><a href='./login.php'>Login</a></li>"
-              ."<li><a href='./signup.php'>Signup</a></li>";
-        }
-        ?>
-      </ul>
-    </nav>
-  </header>
+  <?php include 'views/header.php'; ?>
 
+  <?php include 'views/sidebar.php'; ?>
   
-  <div id='sidebar'>
-    <div id='sidebar-search-container'>
-        <input id="sidebar-text-input"
-          class='sidebar-search-entry' type='text' name='text'
-          placeholder='Search in titles and tags'/>
-
-        <input type="text" id="sidebar-author-input"
-          class='sidebar-search-entry' name="author" list="authorList"
-          placeholder='Author'>
-        <datalist id="authorList">
-          <?php foreach ($authorList as $author){
-            echo "<option value='$author'></option>";
-          } echo "\n";?>
-        </datalist>
-
-        <input type="text" id="sidebar-category-input"
-          class='sidebar-search-entry' name="category" list="categoryList"
-          placeholder='Category'>
-        <datalist id="categoryList">
-          <?php foreach ($categoryList as $category){
-            echo "<option value='$category'></option>";
-          } echo "\n";?>
-        </datalist>
-
-        <input type="text" id="sidebar-user-input"
-          class='sidebar-search-entry' name="user" list="userList"
-          placeholder="User">
-        <datalist id="userList">
-          <?php foreach ($userList as $user){
-            $userName = $user->getName();
-            echo "<option value='$userName'></option>";
-          } echo "\n";?>
-        </datalist>
-      
-        <input type="text" id="sidebar-tags-input"
-          class='sidebar-search-entry' name="tags"
-          placeholder='Tags separated by spaces'>
-
-        <button class='custom-button sidebar-search-entry' id='sidebar-search-submit'>Refresh</button>
-    </div>
-  </div>
+ 
 
   <div id='main-container'>
 
@@ -119,24 +64,23 @@ if (!is_array($userList)){
 
       <div unselectable="on" class='unselectable' id='slide-image-container'>
         <img unselectable="on" class='unselectable' id='slide-image'>
-        </img>
       </div>
 
       <div id='slide-exit-button-out'>
-          <div id='slide-exit-button-in'></div>
+        <div id='slide-exit-button-in'></div>
       </div>
 
 
       <div id='slide-prev-button-out'>
         <div id='slide-prev-button-mid'>
           <div id='slide-prev-button-in'></div>
-        </di>
+        </div>
       </div>
 
       <div id='slide-succ-button-out'>
         <div id='slide-succ-button-mid'>
           <div id='slide-succ-button-in'></div>
-        </di>
+        </div>
       </div>
 
     </div>
