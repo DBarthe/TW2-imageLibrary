@@ -11,25 +11,29 @@ RESTART IDENTITY CASCADE
 INSERT INTO
   image (url, author_name, author_url, width, height, license, title)
 VALUES
-  ('toto', 'NASA', 'www.nasa.gov', 140, 80, (true, true, true, true), 'Jupiter')
+  ('upload.wikimedia.org/wikipedia/commons/e/e2/Jupiter.jpg',
+    'NASA', 'www.nasa.gov', 140, 90, (true, true, true, true), 'Jupiter')
 ;
 
 INSERT INTO
   image (url, author_name, author_url, width, height, license, title)
 VALUES
-  ('toto', 'NASA', 'www.nasa.gov', 140, 80, (true, true, true, true), 'Saturn')
+  ('upload.wikimedia.org/wikipedia/commons/f/f4/Saturn_false_color_Voyager-1.jpg',
+    'NASA', 'www.nasa.gov', 140, 80, (false, true, true, true), 'Saturn')
 ;
 
 INSERT INTO
   image (url, author_name, author_url, width, height, license, title)
 VALUES
-  ('toto', 'Joe Star', 'www.ntm.com', 140, 80, (true, true, true, true), 'Oué gros !')
+  ('http://upload.wikimedia.org/wikipedia/commons/d/df/JoeyStarr_2012.jpg',
+    'Joe Star', 'www.ntm.com', 140, 80, (true, true, true, true), 'Oué gros !')
 ;
 
 INSERT INTO
   image (url, author_name, author_url, width, height, license, title)
 VALUES
-  ('titi', 'Booba', null, 140, 80, (true, true, true, true), 'WALA')
+  ('http://upload.wikimedia.org/wikipedia/commons/c/cb/Booba.jpg',
+    'Booba', null, 140, 80, (true, true, true, true), 'WALA')
 ;
 
 
@@ -62,7 +66,6 @@ VALUES (
   (SELECT id FROM image WHERE author_name = 'NASA' AND title = 'Saturn')
 );
 
-
 INSERT INTO
   image_category
 VALUES (
@@ -70,6 +73,12 @@ VALUES (
   (SELECT id FROM image WHERE author_name = 'Joe Star' AND title = 'Oué gros !')
 );
 
+INSERT INTO
+  image_category
+VALUES (
+  'rap',
+  (SELECT id FROM image WHERE author_name = 'Booba')
+);
 
 
 -- INSERT TAGS
@@ -111,6 +120,14 @@ VALUES (
   'rap',
   (SELECT id FROM image WHERE author_name = 'Joe Star' AND title = 'Oué gros !')
 );
+
+INSERT INTO
+  image_tag
+VALUES (
+  'rap',
+  (SELECT id FROM image WHERE author_name = 'Booba')
+);
+
 
 -- INSERT ACCOUNTS
 INSERT INTO account VALUES (DEFAULT, 'foo', 'foo');

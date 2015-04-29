@@ -99,7 +99,10 @@ var photoLib = (function(photoLib){
 
     'url': {
       get: function(){ return this._url },
-      set: function(url){ imageSetterHelper(this, 'url', url, 'string') }
+      set: function(url){
+        imageSetterHelper(this, 'url',
+          photoLib.utils.normalizeURL(url), 'string')
+      }
     },
 
     'size': {
@@ -152,12 +155,27 @@ var photoLib = (function(photoLib){
         }
         this._tagList = tagList
       }
+    },
+
+    'license': {
+      get: function(){ return this._license },
+      set: function(license){
+        if (typeof license === 'undefined' || license.constructor !== Array){
+          throw 'error: invalid image license';
+        }
+        this._license = {
+          by: license[0],
+          sa: license[1],
+          nc: license[2],
+          nd: license[3],
+        }
+      }
     }
   })
 
   var imageProperties = [
-    'id', 'url', 'size', 'thumbnail', 'author',
-    'authorUrl', 'title', 'categoryList', 'tagList'
+    'id', 'url', 'size', 'thumbnail', 'author', 'authorUrl',
+    'title', 'categoryList', 'tagList', 'license'
   ]
 
   /**
@@ -170,9 +188,7 @@ var photoLib = (function(photoLib){
     var img = Object.create(imagePrototype);
     
     for (var i = 0; i < imageProperties.length; i += 1){
-      var property = imageProperties[i];
-      console.log(property + '=' + values[property] + " - " + (typeof values[property]));
-
+      var property = imageProperties[i]
       if (values[property] === null){
         img[property] = undefined        
       }
@@ -193,12 +209,12 @@ var photoLib = (function(photoLib){
     // the collection of images
     '_collection': { value: [], writable: true, enumerable: true },
 
+
     // collection hiden getter and setter
     'collection': {
       get: function(){
         return this._collection
       },
-
       // this setter calls this.notify to inform the obervers that the model has changed
       set: function(collection){
         console.log("collection change")
@@ -207,13 +223,29 @@ var photoLib = (function(photoLib){
       }
     },
 
+    // true we can't fetch more resutls for the current search
+    '_finished': { value: true, writable: true, enumerable: true },
+    'finished': {
+      get: function(){
+        return this._finished
+      },
+      set: function(value){
+        this._finished = value
+        this.notify()
+      }
+    },
+
+
     /**
      * replace the current collection by a new collection of image
      * @param array collection an array of images
      */
     'replace': {
-      value: function(collection){
+      value: function(collection, finished){
         console.log("collection rep")
+        if (typeof finished !== 'undefined'){
+          this._finished = finished
+        }
         this.collection = collection
       }
     },
@@ -223,7 +255,10 @@ var photoLib = (function(photoLib){
      * @param {array|image} collectionOrItem an array of images, or an image
      */
     'feed': {
-      value: function(collectionOrItem){
+      value: function(collectionOrItem, finished){
+        if (typeof finished !== 'undefined'){
+          this._finished = finished
+        }
         this.collection = this.collection.concat(collectionOrItem)
       }
     },
@@ -232,10 +267,58 @@ var photoLib = (function(photoLib){
      * Empty the collection.
      */
     'clear': {
-      value: function(){
+      value: function(finished){
+        if (typeof finished !== 'undefined'){
+          this._finished = finished
+        }
         this.collection = []
       }
-    }
+    },
+
+    /**
+     * Return the image with the given id or null
+     */
+    'getImageById': {
+      value: function(id){
+        for (var i = 0; i < this._collection.length; i += 1){
+          if (this._collection[i].id === id){
+            return this._collection[i]
+          }
+        }
+        return null
+      }
+    },
+
+    /**
+     * Return the image that follow the image with the given id
+     * or null if it doesn't exist
+     */
+    'getNextImage': {
+      value: function(id){
+        for (var i = 0; i < this._collection.length; i += 1){
+          if (this._collection[i].id === id){
+            return this._collection[(i + 1) % this._collection.length]
+          }
+        }
+        return null
+      }
+    },
+
+    /**
+     * Return the image followed by the image with the given id
+     * or null if it doesn't exist
+     */
+    'getPreviousImage': {
+      value: function(id){
+        for (var i = 0; i < this._collection.length; i += 1){
+          if (this._collection[i].id === id){
+            var index = (i > 0 ? i - 1: this._collection.length - 1)
+            return this._collection[index]
+          }
+        }
+        return null
+      }
+    },
   })
 
   /**
@@ -283,19 +366,49 @@ var photoLib = (function(photoLib){
     }
   })
 
+  var searchCriteria = Object.create(modelPrototype, {
+    'criteria': { value: {}, enumerable: true, writable: true },
+  })
+
+  var viewMode = Object.create(modelPrototype, {
+    // value for mode can be 'list' or 'slide'
+    'mode': { value: 'list', enumerable: true, writable: true },
+    'options': { value: {}, enumerable: true, writable: true },
+
+    'toggleSlide': {
+      value: function(image){
+        this.mode = 'slide'
+        this.options = {
+          image: image
+        }
+        this.notify()
+      }
+    },
+
+    'toggleList': {
+      value: function(){
+        this.mode = 'list'
+        this.options = {}
+        this.notify()
+      }
+    }
+  })
 
   searchResults.initialize()
   searchStatus.initialize()
+  searchCriteria.initialize()
+  viewMode.initialize()
 
 
   // Create a sub-namespace 'models'. Add some of the the previous definitions to it.
   photoLib.models = {
     buildImage: buildImage,
     searchResults: searchResults,
+    searchCriteria: searchCriteria,
     searchStatus: searchStatus,
     session: null,
     userCollection: null,
-    viewMode: null,
+    viewMode: viewMode,
     thumbnailDir: null
   }
 

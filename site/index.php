@@ -23,11 +23,12 @@ if (!is_array($userList)){
 }?>
 <html lang='en-US'>
 <head>
-  <meta charset=utf-8>
+  <meta charset='utf-8'>
   <meta name=viewport content="width=device-width, initial-scale=1">
 
   <link rel="stylesheet" type="text/css" href="css/global.css">
 
+  <script type="text/javascript" src='./js/utils.js'></script>
   <script type="text/javascript" src='./js/models.js'></script>
   <script type="text/javascript" src='./js/services.js'></script>
   <script type="text/javascript" src='./js/controllers.js'></script>
@@ -97,146 +98,49 @@ if (!is_array($userList)){
           class='sidebar-search-entry' name="tags"
           placeholder='Tags separated by spaces'>
 
-        <button class='sidebar-search-entry' id='sidebar-search-submit'>Refresh</button>
+        <button class='custom-button sidebar-search-entry' id='sidebar-search-submit'>Refresh</button>
     </div>
   </div>
 
-  <div id='main-container' class='inline-block'>
+  <div id='main-container'>
 
- <!--    <p>toto
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
+    <div id='image-grid-container'>
+    </div>
 
-          <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p>
-    <p>fqsdjq
-      dqs
-      dqsd
-      fqsdfqsdfqsdfqsjdfqsdfqsfqd</p> -->
+    <div id='more-container'>
+      <button class='custom-button' id='more-button'>Show more</button>
+      <p id='no-more-text'>No more results to display</p>
+    </div>
+  </div>
 
+  <div unselectable="on" class='unselectable' id='slide-container'>
+    <div unselectable="on" class='unselectable' id='slide-bg'></div> 
+
+    <div unselectable="on" class='unselectable' id='slide-content'>
+
+      <div unselectable="on" class='unselectable' id='slide-image-container'>
+        <img unselectable="on" class='unselectable' id='slide-image'>
+        </img>
+      </div>
+
+      <div id='slide-exit-button-out'>
+          <div id='slide-exit-button-in'></div>
+      </div>
+
+
+      <div id='slide-prev-button-out'>
+        <div id='slide-prev-button-mid'>
+          <div id='slide-prev-button-in'></div>
+        </di>
+      </div>
+
+      <div id='slide-succ-button-out'>
+        <div id='slide-succ-button-mid'>
+          <div id='slide-succ-button-in'></div>
+        </di>
+      </div>
+
+    </div>
   </div>
 
   <footer></footer>

@@ -53,7 +53,7 @@ class ImageSearch {
         if (is_null($nameCriteria)){
           $nameCriteria = $nameGet;
         }
-        if (isset($get[$nameGet])){
+        if (isset($get[$nameGet]) && !empty($get[$nameGet])){
           $value = $get[$nameGet];
           if (!is_null($f)){
             $value = $f($value);
@@ -142,14 +142,27 @@ class ImageSearch {
       'title' => $imageRow['title'],
       'categories' => $categories,
       'keywords' => $tags,
-      'thumbnail' => \PhotoLibrary\Shortcuts::getThumbnailName($imageRow)
+      'thumbnail' => \PhotoLibrary\Shortcuts::getThumbnailName($imageRow),
+      'licence' => ImageSearch::_mapLicense($imageRow['license']),
+      'mime_type' => 'image/jpeg' // fake mime type
     );
 
     if ($withId){
       $obj['id'] = $imageRow['id'];
     }
-
     return $obj;
+  }
+
+  /**
+   * map the string representation of the license to an array 
+   * @param  string $str 
+   * @return array
+   */
+  private static function _mapLicense($str){
+    $str = rtrim(trim($str, '('), ')');
+    return array_map(function($v){
+      return ($v === 't' ? true : false);
+    }, explode(',', $str));
   }
 }
 

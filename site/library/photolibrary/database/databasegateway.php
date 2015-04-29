@@ -58,7 +58,7 @@ class DatabaseGateway {
     if (isset($criteria['author'])){
       $params[':author'] = $criteria['author'];
       $query = '(SELECT image.* FROM '.$query.' AS image 
-        WHERE image.author_name = :author)';
+        WHERE lower(image.author_name) = lower(:author))';
     }
 
     // category
@@ -66,7 +66,7 @@ class DatabaseGateway {
       $params[':category'] = $criteria['category'];
       $query = '(SELECT image.* FROM '.$query.' AS image 
         INNER JOIN image_category AS ic
-        ON (ic.image_id = image.id AND ic.category_name = :category))';
+        ON (ic.image_id = image.id AND lower(ic.category_name) ILIKE lower(:category)))';
     }
 
     // tags
@@ -77,12 +77,12 @@ class DatabaseGateway {
         foreach ($tags as $index => $tag){
           $paramName = ':tag'.$index; 
           $tagSet[] = $paramName;
-          $params[$paramName] = $tag;
+          $params[$paramName] = strtolower($tag);
         }
         $tagSet = implode(',', $tagSet);
         $query = '(SELECT DISTINCT image.* FROM '.$query.' AS image 
           INNER JOIN image_tag AS it
-          ON (image.id = it.image_id AND it.tag IN ('.$tagSet.')))';
+          ON (image.id = it.image_id AND lower(it.tag) IN ('.$tagSet.')))';
       }
     }
 
@@ -91,8 +91,8 @@ class DatabaseGateway {
       $params[':pattern'] = '%'.$criteria['text'].'%';
       $query = '(SELECT DISTINCT image.* FROM '.$query.' AS image 
         INNER JOIN image_tag AS it
-        ON (image.title LIKE :pattern
-        OR (it.image_id = image.id AND it.tag LIKE :pattern)))';
+        ON (image.title ILIKE :pattern
+        OR (it.image_id = image.id AND it.tag ILIKE :pattern)))';
     }
 
     // if criteria was empty... (except limit and offset)
