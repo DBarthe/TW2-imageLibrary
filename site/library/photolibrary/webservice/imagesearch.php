@@ -119,7 +119,7 @@ class ImageSearch {
    * return an image object to serialize from an image row.
    * @return array    
    */
-  private static function _buildImageObject($imageRow, $withId){
+  public static function _buildImageObject($imageRow, $withId){
     $db = \PhotoLibrary\Shortcuts::getDatabase();
 
     $categories = $db->getImageCategories($imageRow['id']);

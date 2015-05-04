@@ -1,5 +1,6 @@
 <?php
-require 'library/autoload.php';
+
+require_once ('./library/autoload.php');
 
 use \PhotoLibrary\WebService\ImageSearch;
 use \PhotoLibrary\Serializer\JsonSerializer;

@@ -32,7 +32,8 @@
    */
   var imageListView = Object.create(Object.prototype)
 
-  imageListView.initialize = function(){}
+  imageListView.initialize = function(){
+  }
 
   imageListView.update = function(){
     elements.slideContainer.style.display = 'none'
@@ -68,11 +69,22 @@
         + 'class="image-info-elem">'+img.author+'</a> - '
       html += '<span class="image-info-elem">'+img.size.width+'x'+img.size.height+'</span><p>'
       html += this.makeLicenseElement(img.license)
-      html += '<p><a class="image-info-button" href="'+img.url+'">Visit page</a> '
+      html += '<p>' // + '<a class="image-info-button" href="'+img.url+'">Visit page</a>'
       html += '<a onclick="photoLib.controllers.thumbButtons.viewImage(' + img.id +')" '
         + 'class="image-info-button"  href="#">View image</a></p>'
-      /* if logged */
-      html += '<p><a class="image-info-button">Add to favorites</a></p>'
+
+      if (photoLib.models.session.isLogged()){
+        if (photoLib.models.favorites.contains(img.id)){
+          html += '<button class="add-btn added"'
+            + 'onclick="photoLib.controllers.favorites.removeFromFavorites('+img.id+')">'
+            + '<span></span></button>'
+        }
+        else {
+          html += '<button class="add-btn"'
+            + 'onclick="photoLib.controllers.favorites.addToFavorites('+img.id+')">'
+            + '<span></span></button>' 
+        }
+      }
       html += '</div>'
         + "</div>"
         + '</span>'
@@ -182,6 +194,9 @@
         that.update()
       }),
       'viewMode': photoLib.models.viewMode.attach(function(){
+        that.update()
+      }),
+      'favorites': photoLib.models.favorites.attach(function(){
         that.update()
       })
     }

@@ -207,7 +207,7 @@ var photoLib = (function(photoLib){
   var searchResults = Object.create(modelPrototype, {
 
     // the collection of images
-    '_collection': { value: [], writable: true, enumerable: true },
+    '_collection': { value: [], writable: true, enumerable: false },
 
 
     // collection hiden getter and setter
@@ -224,7 +224,7 @@ var photoLib = (function(photoLib){
     },
 
     // true we can't fetch more resutls for the current search
-    '_finished': { value: true, writable: true, enumerable: true },
+    '_finished': { value: true, writable: true, enumerable: false },
     'finished': {
       get: function(){
         return this._finished
@@ -366,10 +366,16 @@ var photoLib = (function(photoLib){
     }
   })
 
+  /**
+   * The last criteria of the search, used to load more results.
+   */
   var searchCriteria = Object.create(modelPrototype, {
     'criteria': { value: {}, enumerable: true, writable: true },
   })
 
+  /**
+   * indicated the current view mode, and optional data about it 
+   */
   var viewMode = Object.create(modelPrototype, {
     // value for mode can be 'list' or 'slide'
     'mode': { value: 'list', enumerable: true, writable: true },
@@ -394,10 +400,126 @@ var photoLib = (function(photoLib){
     }
   })
 
+  /**
+   * Session models: say if the user is authenticated, who he is...
+   */
+  var session = Object.create(modelPrototype, {
+    'isLogged': {
+      value: function(){
+        return this._logged
+      }
+    },
+    'username': {
+      enumerable: true,
+      get: function(){
+        return this._username
+      } 
+    },
+    /**
+     * tag the user as logged
+     */
+    'tagAsLogged': {
+      value: function(username){
+        if (!this._logged){
+          console.log('tagHasLogged')
+          this._logged = true
+          this._username = username
+          this.notify()
+        }
+      }
+    },
+    /**
+     * tag the user an anonymous
+     */
+    'tagAsAnonymous': {
+      value: function(){
+        if (this._logged){
+          console.log('tagHasAnon')
+          delete this._username
+          this._logged = false
+          this.notify()
+        }
+      }
+    }
+  })
+
+  /**
+   * the favorites of the user, if it's logged
+   */
+  var favorites = Object.create(modelPrototype, {
+
+    /**
+     * _collection is an associative array imageId => image
+     */
+    'collection': {
+      get: function(){
+        return this._collection || {}
+      }
+    },
+
+    /**
+     * clear the collection
+     */
+    'clear': {
+      value: function(){
+        this._collection = {}
+        this.notify()
+      }
+    },
+
+    /**
+     * replace the current collection by a new
+     */
+    'replace': {
+      value: function(collectionArray){
+        this._collection = {}
+        this.feed(collectionArray)
+      }
+    },
+
+    /**
+     * add some elements to the current collection
+     */
+    'feed': {
+      value: function(collectionArray){
+        for (var i = 0; i < collectionArray.length; i += 1){
+          var img = collectionArray[i]
+          this._collection[img.id] = img
+        }
+        this.notify()
+      }
+    },
+
+    /**
+     * Say if an image exist in the user favorites collection
+     */
+    'contains': {
+      value: function(imageId){
+        return this._collection.hasOwnProperty(imageId)
+      }
+    },
+
+    /**
+     * remove one image
+     */
+    'remove': {
+      value: function(imageId){
+        if (this.contains(imageId)){
+          delete this._collection[imageId]
+          this.notify()
+        }
+      }
+    }
+  })
+
+
+
   searchResults.initialize()
   searchStatus.initialize()
   searchCriteria.initialize()
   viewMode.initialize()
+  session.initialize()
+  favorites.initialize()
 
 
   // Create a sub-namespace 'models'. Add some of the the previous definitions to it.
@@ -406,8 +528,8 @@ var photoLib = (function(photoLib){
     searchResults: searchResults,
     searchCriteria: searchCriteria,
     searchStatus: searchStatus,
-    session: null,
-    userCollection: null,
+    session: session,
+    favorites: favorites,
     viewMode: viewMode,
     thumbnailDir: null
   }

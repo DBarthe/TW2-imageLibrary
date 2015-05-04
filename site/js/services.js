@@ -26,9 +26,12 @@
     this.queryString = undefined
   }
 
-  AsyncGetRequest.prototype._buildUrl = function(baseUrl, params){
-    this._buildQueryString()
-    this.url = this.baseUrl + '?' + this.queryString
+  AsyncGetRequest.prototype._buildUrl = function(){
+    this.url = this.baseUrl
+    if (typeof this.params !== 'undefined'){
+      this._buildQueryString()
+      this.url += '?' + this.queryString
+    }
     console.log('url: ' + this.url)
   }
 
@@ -48,14 +51,14 @@
 
     var req = new XMLHttpRequest()
 
-    req.addEventListener('load', this.onLoad, false)
-    req.addEventListener('progress', this.onProgress, false)
-    req.addEventListener('error', this.onFailure, false)
+    this.onLoad && req.addEventListener('load', this.onLoad, false)
+    this.onProgress && req.addEventListener('progress', this.onProgress, false)
+    this.onError && req.addEventListener('error', this.onFailure, false)
+    this.onEnd && req.addEventListener('loadend', this.onEnd, false)
 
     req.open('get', this.url)
     req.send()
   }
-
 
   photoLib.services = {
     AsyncGetRequest: AsyncGetRequest

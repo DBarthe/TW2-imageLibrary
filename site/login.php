@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $password = $_POST['password'];
 
     if ($session->authenticate($login, $password) === true){
-      header("Location: /index.php");
+      header("Location: ./index.php");
       die();
     }
   }
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     <form name='loginForm' method='post' action='login.php'>
       <span>Username:</span><input class='login-input' type='text' name='username' required/><br />
       <span>Password:</span><input class='login-input' type='password' name='password' required/><br /><br />
-      <input id='login-button' class='custom-button' type='submit' value='Login' />
+      <input id='login-button' class='custom-button' type='submit' value='Log in' />
     </form>
       
   </div>

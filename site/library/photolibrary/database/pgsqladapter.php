@@ -111,8 +111,9 @@ class PgsqlAdapter implements DatabaseAdapterInterface {
       $ret = $this->_queryHandle->execute($params);
     }
     catch (\PDOException $e){
-      throw new \RuntimeException($e->getMessage());
+      return null;
     }
+
     return $ret;
   }
 
@@ -195,8 +196,6 @@ class PgsqlAdapter implements DatabaseAdapterInterface {
     $query = 'INSERT INTO '.$table.' ('.$columns.' ) VALUES ('.$values.')';
 
     $this->query($query, $params);
-
-
 
     return (is_null($idColumn) ? null : $this->getInsertId($table, $idColumn));
   }

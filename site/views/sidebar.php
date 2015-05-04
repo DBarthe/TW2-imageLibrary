@@ -4,33 +4,30 @@
         class='sidebar-search-entry' type='text' name='text'
         placeholder='Search in titles and tags'/>
 
-      <input type="text" id="sidebar-author-input"
-        class='sidebar-search-entry' name="author" list="authorList"
-        placeholder='Author'>
-      <datalist id="authorList">
+      <select id="sidebar-author-input"
+        class='sidebar-search-entry' name="author">
+        <option value=''>Any author</option>
         <?php foreach ($authorList as $author){
-          echo "<option value='$author'></option>";
+          echo "<option value='$author'>$author</option>";
         } echo "\n";?>
-      </datalist>
+      </select>
 
-      <input type="text" id="sidebar-category-input"
-        class='sidebar-search-entry' name="category" list="categoryList"
-        placeholder='Category'>
-      <datalist id="categoryList">
+      <select id="sidebar-category-input"
+        class='sidebar-search-entry' name="category">
+        <option value=''>Any category</option>
         <?php foreach ($categoryList as $category){
-          echo "<option value='$category'></option>";
+          echo "<option value='$category'>$category</option>";
         } echo "\n";?>
-      </datalist>
+      </select>
 
-      <input type="text" id="sidebar-user-input"
-        class='sidebar-search-entry' name="user" list="userList"
-        placeholder="User">
-      <datalist id="userList">
+      <select id="sidebar-user-input"
+        class='sidebar-search-entry' name="user">
+        <option value=''>Any user</option>
         <?php foreach ($userList as $user){
           $userName = $user->getName();
-          echo "<option value='$userName'></option>";
+          echo "<option value='$userName'>$userName</option>";
         } echo "\n";?>
-      </datalist>
+      </select>
     
       <input type="text" id="sidebar-tags-input"
         class='sidebar-search-entry' name="tags"

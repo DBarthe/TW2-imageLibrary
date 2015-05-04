@@ -172,15 +172,18 @@ input.sidebar-search-entry:focus {
 
 #image-grid li {
   display: inline-block;
-  margin: 0px 8px 0 8px;
+  margin: 8px 8px 8px 8px;
   vertical-align: top;
   height: 300px;
+  width: 300px;
   line-height: 300px;
   text-align: center;
 }
 
 .image-thumb-helper {
   height: 100%;
+  width: 100%;
+  
   display: inline-block;
   vertical-align: middle;
 }
@@ -189,6 +192,7 @@ input.sidebar-search-entry:focus {
   vertical-align: middle;
   max-height: 300px;
   max-width: 300px;
+
   border: none;
   border-radius: 5px;
 }
@@ -199,22 +203,24 @@ input.sidebar-search-entry:focus {
 }
 
 .image-thumb-info {
+  padding-top: 45px;
   border-radius: 5px;
   position: absolute;
   left: 0px;
   top: 0px;
-  display: none;
+
   background-color: black;
+  opacity: 0;
   color: white;
-  opacity: 0.7;
   height: 100%;
   width: 100%;
   text-align: center;
   line-height: normal;
+  transition: opacity 0.2s ease 0s;
 }
 
 .image-thumb-helper:hover .image-thumb-info {
-  display: block;
+  opacity: 0.7;
 }
 
 .image-title {
@@ -248,6 +254,80 @@ input.sidebar-search-entry:focus {
   color: white;
   opacity: 1;
 }
+
+
+.add-btn {
+  cursor: pointer;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  opacity: 1;
+  width: 44px;
+  height: 44px;
+  box-shadow: none;
+  border: none;
+  color: white;
+  background-color: rgba(0,0,0,0);
+  margin: 0;
+  padding: 0;
+}
+
+.add-btn span {
+  font-size: 50px;
+  position: relative;
+  top: -10px;
+  left: 0px;
+}
+
+.add-btn span:before {
+  content: "+";
+}
+
+.add-btn:hover {
+  opacity: 1;
+  color: #46BE9C;
+}
+
+.add-btn:hover span {
+  /*top: -17px;*/
+}
+
+.add-btn.added {
+  opacity: 1;
+  color: #46BE9C;
+  border-radius: 24px;
+  border: solid 2px;
+  border-color: #46BE9C;
+}
+
+.add-btn.added span {
+  position: relative;
+  top: -10px;
+  left: -1px;
+}
+
+.add-btn.added span:before {
+  content: "✓";
+}
+
+.add-btn.added:hover {
+  color: white;
+  border-radius: 24px;
+  border: solid 2px;
+  border-color: white;
+}
+
+.add-btn.added:hover span {
+  font-size: 35px;
+  top: -3px;
+  left: 0px;
+  color: white;
+}
+
+.add-btn.added:hover span:before {
+  content: "x";
+}
+
 
 
 .cc-thumb {
@@ -393,7 +473,7 @@ input.sidebar-search-entry:focus {
 }
 
 #slide-prev-button-in {
-  background-image: url('/images/arrow-prev.svg');
+  background-image: url('../images/arrow-prev.svg');
   width: 26px;
   height: 26px;
   position: absolute;
@@ -425,7 +505,7 @@ input.sidebar-search-entry:focus {
 }
 
 #slide-succ-button-in {
-  background-image: url('/images/arrow-succ.svg');
+  background-image: url('../images/arrow-succ.svg');
   width: 26px;
   height: 26px;
   position: absolute;
@@ -461,7 +541,7 @@ input.sidebar-search-entry:focus {
 }
 
 #slide-exit-button-in {
-  background-image: url('/images/exit.svg');
+  background-image: url('../images/exit.svg');
   width: 26px;
   height: 26px;
   position: absolute;

@@ -8,7 +8,7 @@ $page = 'signup';
 $session = new \PhotoLibrary\Session\Session();
 
 if ($session->isAuthenticated()){
-  header("Location: /index.php");
+  header("Location: ./index.php");
   die();
 }
 
@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
       <span>Password:</span><input class='signup-input' type='password' name='password' required/><br />
       <span>Password, again:</span><input class='signup-input' type='password' name='re-password' required/><br /><br />
 
-      <input id='signup-button' class='custom-button' type='submit' value='Signup' />
+      <input id='signup-button' class='custom-button' type='submit' value='Sign up' />
     </form>
       
   </div>

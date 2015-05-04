@@ -1,14 +1,19 @@
-<?php
+<?php 
 session_start();
 
-require_once 'library/autoload.php';
+require_once ('./library/autoload.php');
 
 $session = new \PhotoLibrary\Session\Session();
+$responseObj = array();
+
 
 if ($session->isAuthenticated()){
-  echo "{ 'authenticated': true, 'user': '".$session->getUser()->getName()."'}";
+  $responseObj['authenticated'] = true;
+  $responseObj['username'] = $session->getUser()->getName();
 }
 else {
-  echo "{ 'authenticated': false }";
+  $responseObj['authenticated'] = false;
 }
+
+echo \PhotoLibrary\Serializer\JsonSerializer::encode($responseObj);
 ?>

@@ -20,8 +20,8 @@ CREATE TABLE image (
 
   author_url text, -- url of the author website (optional)
 
-  width integer NOT NULL CHECK (width >= 0 AND width <= 300),
-  height integer NOT NULL CHECK (height >= 0 AND height <= 300),
+  width integer NOT NULL,
+  height integer NOT NULL,
 
   license cc_license_type NOT NULL,
 

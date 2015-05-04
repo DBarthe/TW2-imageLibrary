@@ -11,7 +11,7 @@ var photoLib = (function(photoLib){
     console.log("create photoLib")
   }
 
-  const FETCH_CHUNK_SIZE = 2
+  const FETCH_CHUNK_SIZE = 10
 
   /**
    * The prototype of all controllers
@@ -115,7 +115,7 @@ var photoLib = (function(photoLib){
   searchResultsCtrl.fetchImages = function(criteria, erase, callback){
 
     var that = this
-        baseUrl = './image-search.php'
+      , baseUrl = './image-search.php'
       , request = new photoLib.services.AsyncGetRequest(baseUrl, criteria)
 
     request.onLoad = function(e){
@@ -279,8 +279,159 @@ var photoLib = (function(photoLib){
     }
   }
 
+  /**
+   * Session controller
+   */
+  var sessionCtrl = Object.create(ctrlPrototype)
+
+  sessionCtrl.initialize = function(){
+    this.updateDelay = 5000 // 5s
+    this.firstTime = true
+  }
+
+  sessionCtrl.bind = function(){
+    var that = this
+    if (this.firstTime){
+      this.firstTime = false
+      that.update() // this will call bind again
+    }
+    else {
+      setTimeout(function(){ that.update() }, this.updateDelay)
+    }
+  }
+
+  sessionCtrl.update = function(){
+    var that = this
+      , baseUrl = './who-am-i.php'
+      , request = new photoLib.services.AsyncGetRequest(baseUrl)
+
+    request.onLoad = function(e){
+      if (this.status != 200){
+        console.log('server error')
+        photoLib.models.session.tagAsAnonymous()
+      }
+      else {
+        var responseObj = JSON.parse(this.responseText)
+        if (responseObj.authenticated === false){
+          console.log('anonymous')
+          photoLib.models.session.tagAsAnonymous()
+        }
+        else {
+          console.log('authenticated')
+          photoLib.models.session.tagAsLogged(responseObj.username)
+        }
+      }
+    }
+
+    request.onFailure = function(){
+      console.log('failure')
+      photoLib.models.session.tagAsAnonymous()
+    }
+
+    request.onEnd = function(){
+      that.bind() // rebind to the near 5 sec
+    }
+
+    request.send()
+  }
+
+
+  /**
+   * a controller to manage user favorites collection
+   */
+  var favoritesCtrl = Object.create(ctrlPrototype)
+
+  favoritesCtrl.bind = function(){
+    var that = this
+
+    photoLib.models.session.attach(function(){
+      console.log('sessionHasChanged')
+      that.sessionHasChanged()
+    })
+  }
+
+  favoritesCtrl.sessionHasChanged = function(){
+    if (photoLib.models.session.isLogged()){
+      this.fetchUserFavorites()
+    }
+    else {
+      photoLib.models.favorites.clear()  
+    }
+  }
+
+  favoritesCtrl.fetchUserFavorites = function(){
+    var that = this
+      , criteria = {
+          collection: photoLib.models.session.username,
+          withId: true
+        }
+      , baseUrl = './image-search.php'
+      , request = new photoLib.services.AsyncGetRequest(baseUrl, criteria)
+
+    request.onLoad = function(e){
+
+      if (this.status != 200){
+        photoLib.models.favorites.clear()
+      }
+
+      var responseObj = JSON.parse(this.responseText)
+      if (responseObj.status != 'ok'){
+        photoLib.models.favorites.clear()
+      }
+
+      that.populateFavorites(responseObj)
+    }
+
+    request.onFailure = function(){
+      console.log('failure')
+      photoLib.models.favorites.clear()
+    }
+
+    request.send();
+  }
+
+  favoritesCtrl.mapEntryToBuilderParams = searchResultsCtrl.mapEntryToBuilderParams
+
+  favoritesCtrl.populateFavorites = function(responseObj){
+    var collection = []
+
+    for (var i = 0; i < responseObj.result.length; i += 1){
+      var entry = responseObj.result[i]
+        , params = this.mapEntryToBuilderParams(entry)
+        , img = photoLib.models.buildImage(params)
+      collection.push(img)
+    }
+
+    photoLib.models.favorites.replace(collection)
+  }
+
+  favoritesCtrl.addToFavorites = function(imageId){
+    var image = photoLib.models.searchResults.getImageById(imageId)
+    photoLib.models.favorites.feed([image])
+    this.toogleFavoriteOnServer('add', imageId)
+  }
+
+  favoritesCtrl.removeFromFavorites = function(imageId){
+    photoLib.models.favorites.remove(imageId)
+    this.toogleFavoriteOnServer('remove', imageId)
+  }
+
+  favoritesCtrl.toogleFavoriteOnServer = function(action, imageId){
+    var that = this
+      , params = { action: action, id: imageId }
+      , baseUrl = './favorites.php'
+      , request = new photoLib.services.AsyncGetRequest(baseUrl, params)
+
+    request.onFailure = function(){
+      console.log('failure')
+    }
+
+    request.send();
+  }
+
+
   /*
-   * A manager to maintiain a table of controller.
+   * A manager that maintains a table of controllers.
    */
   var manager = Object.create(Object.prototype, {
 
@@ -314,7 +465,8 @@ var photoLib = (function(photoLib){
     manager.addCtrl(searchResultsCtrl)
     manager.addCtrl(thumbButtonsCtrl)
     manager.addCtrl(slideShowCtrl)
-
+    manager.addCtrl(sessionCtrl)
+    manager.addCtrl(favoritesCtrl)
 
     manager.initializeThem()
     manager.bindThem()
@@ -323,7 +475,9 @@ var photoLib = (function(photoLib){
   photoLib.controllers = {
     thumbButtons: thumbButtonsCtrl,
     searchResults: searchResultsCtrl,
-    slideShow: slideShowCtrl
+    slideShow: slideShowCtrl,
+    session: sessionCtrl,
+    favorites: favoritesCtrl
   }
 
   window.addEventListener('load', initialize, false)
