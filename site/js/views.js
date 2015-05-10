@@ -17,6 +17,7 @@
   var elements = {}
   elements.initialize = function(){
     this.container = document.getElementById("main-container")
+    this.welcomeContainer = document.getElementById("welcome-container")
     this.imageGridContainer = document.getElementById("image-grid-container")
     this.moreContainer = document.getElementById("more-container")
     this.moreButton = document.getElementById("more-button")
@@ -24,8 +25,18 @@
     this.slideContainer = document.getElementById("slide-container")
     this.slideImage = document.getElementById('slide-image')
     this.slideImageContainer = document.getElementById('slide-image-container')
-
+    this.slideTagList = document.getElementById('slide-taglist')
   }
+
+  /**
+   * var welcomeView : displayed at the start, before the user starts a search
+   */
+   var welcomeView = Object.create(Object.prototype)
+
+   welcomeView.update = function(){
+    elements.imageGridContainer.style.display = 'none'
+    elements.welcomeContainer.style.display = 'block'
+   }
 
   /**
    * var imageListView : the standard view mode (grid of image)
@@ -33,9 +44,11 @@
   var imageListView = Object.create(Object.prototype)
 
   imageListView.initialize = function(){
+    var that = this
   }
 
   imageListView.update = function(){
+    elements.welcomeContainer.style.display = 'none'
     elements.slideContainer.style.display = 'none'
 
     if (photoLib.models.searchStatus.str == 'success'){
@@ -50,10 +63,11 @@
       return this.displayEmptyList()
     }
 
-    var html = ""
     elements.imageGridContainer.style.display = 'block';
     elements.moreContainer.style.display = 'block';
 
+
+    var html = ""
     html += "<ul id='image-grid'>"
     for (var i = 0; i < imageList.length; i += 1){
       var img = imageList[i]
@@ -93,7 +107,7 @@
 
     html += "</ul>"
 
-    elements.imageGridContainer.innerHTML = html;
+    elements.imageGridContainer.innerHTML = html
 
     if (photoLib.models.searchResults.finished){
       elements.moreButton.style.display = 'none'
@@ -101,7 +115,7 @@
     } else {
       elements.moreButton.style.display = 'initial'
       elements.noMoreText.style.display = 'none'
-    }    
+    }
   }
 
   imageListView.makeLicenseElement = function(license){
@@ -135,8 +149,6 @@
   imageSlideView.initialize = function(){}
 
   imageSlideView.update = function(){
-
-
     var imgObj = photoLib.models.viewMode.options.image
       , imgElt = elements.slideImage
 
@@ -163,6 +175,19 @@
       elements.slideImageContainer.style.left = x + 'px'
       elements.slideImageContainer.style.visibility = 'visible'
     }
+
+    var tagListHTML = ''
+    for (var i = 0; i < imgObj.tagList.length; i += 1){
+      var tag = imgObj.tagList[i]
+      if (tag.length > 0){
+        tagListHTML += '<span class="slide-tag">' + tag
+        tagListHTML += '<span class="slide-rm-tag"'
+          + 'onclick="photoLib.controllers.slideShow.removeTag(\'' + tag + '\')"'
+          +' class="slide-tag-remove">x</span>'
+        tagListHTML += '</span>'
+      }
+    }
+    elements.slideTagList.innerHTML = tagListHTML;
 
     if (imgElt.src != imgObj.url){
       // elements.slideImageContainer.style.visibility = 'hidden'
@@ -210,7 +235,12 @@
 
   viewManager.update = function(){
 
-    imageListView.update()
+    if (photoLib.models.searchStatus.str == 'none'){
+      welcomeView.update()
+    }
+    else {
+      imageListView.update()
+    }
 
     if (photoLib.models.viewMode.mode == 'slide'){
       imageSlideView.update()

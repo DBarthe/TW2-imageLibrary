@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+// This nodejs script requests the photoLib api to get the full image list.
+// Then, it gets each image form its original server,
+// while converting them on-the-fly into the thumbnail format.
+
 var http = require('http')
   , path = require('path')
   , spawn = require('child_process').spawn

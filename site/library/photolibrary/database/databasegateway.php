@@ -42,7 +42,6 @@ class DatabaseGateway {
    * @return array           an array of images
    */
   public function getImages($criteria){
-
     $query = 'image';
     $params = array();
 
@@ -89,10 +88,16 @@ class DatabaseGateway {
     // text
     if (isset($criteria['text'])){
       $params[':pattern'] = '%'.$criteria['text'].'%';
-      $query = '(SELECT DISTINCT image.* FROM '.$query.' AS image 
+
+      $query = '((SELECT DISTINCT image.* FROM '.$query.' AS image 
+        WHERE image.title ILIKE :pattern)
+        UNION (SELECT DISTINCT image.* FROM '.$query.' AS image
         INNER JOIN image_tag AS it
-        ON (image.title ILIKE :pattern
-        OR (it.image_id = image.id AND it.tag ILIKE :pattern)))';
+        ON (it.image_id = image.id AND it.tag ILIKE :pattern)))';
+
+      // $query = '(SELECT DISTINCT image.* FROM '.$query.' AS image 
+      //   LEFT JOIN image_tag AS it
+      //   ON (it.image_id = image.id AND it.tag ILIKE :pattern) WHERE image.title ILIKE :pattern)';
     }
 
     // if criteria was empty... (except limit and offset)
@@ -202,6 +207,19 @@ class DatabaseGateway {
       return null;
     }
     return array_map(function($row){ return $row['tag']; }, $ret);
+  }
+
+  public function addImageTag($imageId, $tag){
+    $this->_adapter->insert('image_tag',
+      array('image_id' => ':image_id', 'tag' => ':tag'),
+      array(':image_id' => $imageId, ':tag' => $tag),
+      null);
+  }
+
+  public function removeImageTag($imageId, $tag){
+    return $this->_adapter->delete('image_tag',
+      'image_id = :image_id AND tag = :tag',
+      array(':image_id' => $imageId, ':tag' => $tag));
   }
 
   // TABLE USER_LIBRARY

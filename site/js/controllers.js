@@ -58,15 +58,46 @@ var photoLib = (function(photoLib){
       that.processSubmit()
     }, false)
 
-
-    window.addEventListener("scroll", function(){
-      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight){
-        that.askMoreResults()
-      }
-    })
     this.moreButton.addEventListener('click', function(){
       that.askMoreResults()
-    })
+    }, false)
+
+
+    window.addEventListener('keypress', function(e){
+      if (e.keyCode == 13 && photoLib.models.viewMode.mode === 'list'){
+        that.processSubmit()
+        return false
+      }
+      else {
+        return true
+      }
+    }, false)
+
+    var mouseScrollCallback = function(e){
+      if (e.deltaY > 0){
+        if (window.scrollY >= photoLib.utils.getScrollMaxY()){
+          that.askMoreResults()
+        }
+      }
+    }
+
+    var pageScrollCallback = function(e){
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight){
+        that.askMoreResults()
+      }      
+    }
+
+    if (typeof window.onwheel !== 'undefined'){
+      window.addEventListener('wheel', mouseScrollCallback, false)
+    }
+    else if (typeof window.onmousewheel !== 'undefined'){
+      window.addEventListener('mousewheel', mouseScrollCallback, false)
+    }
+    else {
+      // support only when page is longer than the screen
+      window.addEventListener("scroll", pageScrollCallback, false) 
+    }
+
   }
 
   /**
@@ -94,7 +125,6 @@ var photoLib = (function(photoLib){
    * a callback can be optionally given to be executed at the end of the process
    */
   searchResultsCtrl.askMoreResults = function(callback){
-    console.log(photoLib.models.searchResults.finished)
     if (photoLib.models.searchStatus.str != 'success' 
       || photoLib.models.searchResults.finished){
       return;
@@ -113,7 +143,6 @@ var photoLib = (function(photoLib){
    * a callback can be optionally given to be executed at the end of the process
    */
   searchResultsCtrl.fetchImages = function(criteria, erase, callback){
-
     var that = this
       , baseUrl = './image-search.php'
       , request = new photoLib.services.AsyncGetRequest(baseUrl, criteria)
@@ -230,6 +259,7 @@ var photoLib = (function(photoLib){
     this.exitButton = document.getElementById('slide-exit-button-out')
     this.prevButton = document.getElementById('slide-prev-button-mid')
     this.succButton = document.getElementById('slide-succ-button-mid')
+    this.tagInput = document.getElementById('slide-tag-input')
   }
 
   slideShowCtrl.bind = function(){
@@ -242,6 +272,16 @@ var photoLib = (function(photoLib){
     }, false)
     this.succButton.addEventListener('click', function(){
       that.succ()
+    }, false)
+
+    this.tagInput.addEventListener('keypress', function(e){
+      if (e.keyCode == 13){
+        that.addTag()
+        return true
+      }
+      else {
+        return false
+      }
     }, false)
   }
 
@@ -279,13 +319,74 @@ var photoLib = (function(photoLib){
     }
   }
 
+  slideShowCtrl.removeTag = function(tag){
+    var that = this
+      , baseUrl = './tags.php'
+      , params = {
+        action: 'remove',
+        id: photoLib.models.viewMode.options.image.id,
+        tag: tag
+      }
+      , request = new photoLib.services.AsyncGetRequest(baseUrl, params)
+
+    request.onLoad = function(e){
+      if (this.status != 200){
+        console.log('server error')
+      }
+    }
+    request.onFailure = function(){
+      console.log('failure')
+    }
+
+    var index = photoLib.models.viewMode.options.image.tagList.indexOf(tag)
+    photoLib.models.viewMode.options.image.tagList.splice(index, 1)
+    photoLib.models.viewMode.notify()
+
+    request.send()
+  }
+
+  slideShowCtrl.addTag = function(){
+    var tag = this.tagInput.value
+    this.tagInput.value = ''
+    if (tag !== ''){
+      var that = this
+        , baseUrl = './tags.php'
+        , params = {
+          action: 'add',
+          id: photoLib.models.viewMode.options.image.id,
+          tag: tag
+        }
+        , request = new photoLib.services.AsyncGetRequest(baseUrl, params)
+
+      request.onLoad = function(e){
+        if (this.status != 200){
+          console.log('server error')
+        }
+      }
+      request.onFailure = function(){
+        console.log('failure')
+      }
+
+      var tags = tag.split(' ')
+      for (var i = 0; i < tags.length; i += 1){
+        var t = tags[i]
+        if (t !== '' && photoLib.models.viewMode.options.image.tagList.indexOf(t) === -1){
+          photoLib.models.viewMode.options.image.tagList.push(t)
+        }
+      }
+      photoLib.models.viewMode.notify()
+
+      request.send()
+    }
+  }
+
   /**
    * Session controller
    */
   var sessionCtrl = Object.create(ctrlPrototype)
 
   sessionCtrl.initialize = function(){
-    this.updateDelay = 5000 // 5s
+    this.updateDelay = 10000 // 10s
     this.firstTime = true
   }
 
@@ -313,11 +414,9 @@ var photoLib = (function(photoLib){
       else {
         var responseObj = JSON.parse(this.responseText)
         if (responseObj.authenticated === false){
-          console.log('anonymous')
           photoLib.models.session.tagAsAnonymous()
         }
         else {
-          console.log('authenticated')
           photoLib.models.session.tagAsLogged(responseObj.username)
         }
       }

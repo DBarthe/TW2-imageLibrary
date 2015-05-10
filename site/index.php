@@ -43,10 +43,13 @@ if (!is_array($userList)){
   <?php include 'views/header.php'; ?>
 
   <?php include 'views/sidebar.php'; ?>
-  
- 
+
 
   <div id='main-container'>
+    <div id='welcome-container'>
+      <h2>Welcome !</h2>
+      <p>Start exploring the library by doing a search</p>
+    </div>
 
     <div id='image-grid-container'>
     </div>
@@ -70,7 +73,6 @@ if (!is_array($userList)){
         <div id='slide-exit-button-in'></div>
       </div>
 
-
       <div id='slide-prev-button-out'>
         <div id='slide-prev-button-mid'>
           <div id='slide-prev-button-in'></div>
@@ -81,6 +83,12 @@ if (!is_array($userList)){
         <div id='slide-succ-button-mid'>
           <div id='slide-succ-button-in'></div>
         </div>
+      </div>
+
+      <div id='slide-taglist-container'>
+        <span id='slide-taglist'>
+        </span>
+        <input id='slide-tag-input' class="slide-tag" type="text" placeholder="Add a tag"/>
       </div>
 
     </div>

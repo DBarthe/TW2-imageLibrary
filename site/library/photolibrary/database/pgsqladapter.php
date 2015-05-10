@@ -228,7 +228,6 @@ class PgsqlAdapter implements DatabaseAdapterInterface {
    * @return int                    the number of rows deleted
    */ 
   function delete($table, $where, array $params = null){
-
     $query = 'DELETE FROM '.$table.' WHERE '.$where;
     $this->query($query, $params);
     return $this->countRows();

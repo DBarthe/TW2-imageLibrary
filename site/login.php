@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
   <link rel="stylesheet" type="text/css" href="css/global.css">
 
-  <title>PhotoLibrary</title>
+  <title>PhotoLibrary - Log in</title>
 </head>
 <body>
 

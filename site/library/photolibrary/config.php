@@ -6,8 +6,8 @@ class Config {
   public static $DATABASE = array(
     'host' => 'localhost',
     'port' => 5432,
-    'database' => 'projet_tw2',
-    'user' => 'barth',
+    'database' => 'delemotte',
+    'user' => 'delemotte',
     'password' => 'ne5uiJ4h'
   );
 

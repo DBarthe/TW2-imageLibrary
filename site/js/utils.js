@@ -5,12 +5,26 @@
 console.log("loading utils")
 
 /**
- * Define startWith if it doesn't exists
+ * Define startWith if it doesn't exist
  */
-if (typeof String.prototype.startsWith != 'function') {
+if (typeof String.prototype.startsWith !== 'function') {
   String.prototype.startsWith = function (str){
     return this.slice(0, str.length) == str;
   };
+}
+
+/**
+ * Define indexOf if it does not exist 
+ */
+if (typeof Array.prototype.indexOf !== 'function') {
+  Array.prototype.indexOf = function(obj, start){
+    for (var i = (start || 0); i < this.length; i += 0){
+      if (this[i] === obj){
+        return i
+      }
+    }
+    return -1
+  }
 }
 
 var photoLib = (function(photoLib){
@@ -29,7 +43,6 @@ var photoLib = (function(photoLib){
    * @return string  the normalized url
    */
   photoLib.utils.normalizeURL = function(url, protocol){
-
     if (typeof protocol === 'undefined'){
       protocol = 'http'
     }
@@ -40,6 +53,26 @@ var photoLib = (function(photoLib){
     else {
       return url
     }
+  }
+
+  /**
+   * compatibility of window.scrollMaxY 
+   */
+  photoLib.utils.getScrollMaxY = function(){
+    if (typeof window.scrollMaxY !==  'undefined'){
+      return window.scrollMaxY
+    }
+    else {
+      return document.documentElement.scrollHeight - document.documentElement.clientHeight
+    }
+  }
+
+  /**
+   * Remove a value in an array
+   */
+  photoLib.utils.removeValue = function(array, value){
+    var index = array.indexOf(value)
+    array.splice(index, 1)
   }
 
   return photoLib
