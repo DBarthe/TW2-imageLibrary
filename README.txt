@@ -6,11 +6,6 @@ _____________________________
 Étudiant: Barthélémy DELEMOTTE  (Groupe 2)
           barthelemy.delemotte@gmail.com
 
-Malgrè le fait que je sois dans le groupe 2, je n'ai que accès au projet
-"TW2 Groupe 4" sur PROF.
-J'ai envoyé des mails à plusieurs enseignants de l'UE, sans réponse.
-Je vous prie de bien vouloir transférer mon rendu au groupe 2.
-
 _____________________________
 Contenu de l'archive:
   
